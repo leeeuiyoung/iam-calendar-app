@@ -5,7 +5,7 @@ import { getFirestore, doc, setDoc, onSnapshot } from 'firebase/firestore';
 
 // Firebase 구성 (★★★★★ 실제 Firebase 프로젝트의 설정값으로 반드시 교체해주세요! ★★★★★)
 // Canvas 환경에서는 __firebase_config, __initial_auth_token, __app_id 전역 변수가 제공될 수 있습니다.
-const firebaseConfigFromHost = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+
 const firebaseConfigManual = {
     apiKey: "AIzaSyCCGbZc4zEDgbaEhEWpg1rzCHKLQeKHthQ",
   authDomain: "iam-calendar-179e8.firebaseapp.com",
@@ -14,9 +14,9 @@ const firebaseConfigManual = {
   messagingSenderId: "1005875650817",
   appId: "1:1005875650817:web:d6cf5eb571af10d2053b00"
 };
-const finalFirebaseConfig = firebaseConfigFromHost || firebaseConfigManual;
+const finalFirebaseConfig = firebaseConfigManual;
 
-const appIdForFirestore = typeof __app_id !== 'undefined' ? __app_id : 'iam-challenge-react-pure';
+const appIdForFirestore = 'iam-challenge-react-pure';
 
 // Firebase 앱 초기화
 const app = initializeApp(finalFirebaseConfig);
@@ -121,7 +121,7 @@ function App() {
 
   // Firebase 인증 상태 리스너
   useEffect(() => {
-    const hostToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+    const hostToken = null;
     const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
       setIsAuthLoading(true); // 인증 상태 변경 시작 시 로딩
       if (user) {
