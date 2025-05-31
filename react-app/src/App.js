@@ -26,25 +26,20 @@ const db = getFirestore(app);
 // setLogLevel('debug');
 
 const declarations = [
-  "나는 하나님의 존귀한 자녀이다.", "나는 그리스도 안에서 새로운 피조물이다.", "나는 성령의 능력으로 모든 것을 할 수 있다.",
-  "나는 하나님의 사랑을 받는 자이다.", "나는 세상의 빛과 소금이다.", "나는 하나님의 의를 이루는 자이다.",
-  "나는 믿음으로 세상을 이긴다.", "나는 하나님의 약속을 신뢰한다.", "나는 감사함으로 모든 것을 받는다.",
-  "나는 기쁨으로 주님을 섬긴다.", "나는 소망 가운데 인내한다.", "나는 사랑으로 서로를 섬긴다.",
-  "나는 겸손함으로 하나님을 높인다.", "나는 정직함으로 세상과 소통한다.", "나는 지혜롭게 선택하고 행동한다.",
-  "나는 용서함으로 자유를 얻는다.", "나는 평강의 하나님을 경험한다.", "나는 하나님의 말씀을 삶의 기준으로 삼는다.",
-  "나는 기도로 하나님과 교제한다.", "나는 예배를 통해 하나님을 만난다.", "나는 성령의 열매를 맺는 삶을 산다. (사랑, 희락, 화평)",
-  "나는 성령의 열매를 맺는 삶을 산다. (오래 참음, 자비, 양선)", "나는 성령의 열매를 맺는 삶을 산다. (충성, 온유, 절제)",
-  "나는 하나님의 전신갑주를 입는다.", "나는 모든 상황 속에서 하나님을 찬양한다.", "나는 하나님의 인도하심을 따라간다.",
-  "나는 담대하게 복음을 전한다.", "나는 하나님 나라의 확장을 위해 기도한다.", "나는 예수 그리스도의 좋은 군사이다.",
-  "나는 승리하신 주님과 함께 영원히 다스릴 것이다."
+   "나는 하나님의 사랑받는 자녀입니다", "나는 하나님의 형상입니다", "나는 하늘나라 상속자입니다",
+  "나는 하늘나라 시민권자입니다", "나는 하나님께 시선을 두는 자녀입니다", "나는 그리스도의 심판대에서 생각합니다",
+  "나는 하나님 보시기에 심히 좋은 존재입니다", "나는 예수님만큼 가치 있는 존재입니다", "나는 주안에서 기뻐하는 자입니다",
+  "나는 새사람의 정체성으로 살아갑니다", "나는 감사로 문을 열어갑니다", "나는 이기며 승리하는 권세가 있습니다",
+  "나는 말과 혀로 가정을 살리는 자입니다", "나는 그리스도와 연합된 존재입니다", "나는 삶을 인도하시는 하나님을 신뢰합니다",
+  "나는 영혼이 잘됨 같이 범사도 잘됩니다", "나는 믿음을 선포하는 자입니다", "나는 감사로 상황을 돌파합니다",
+  "나는 어떤 상황에서도 하나님을 찬양합니다", "나는 누구보다 존귀한 자녀입니다", "나는 예수님과 함께 걸어갑니다",
+  "나는 어둠을 몰아내는 빛입니다", "나는 기도하며 낙심하는 않는 자입니다",
+  "나는 빛가운데 걸어가는 자녀입니다", "나는 기도응답을 풍성히 누립니다", "나는 소망가운데 인내합니다",
+  "나는 내 생각보다 크신 하나님의 계획을 신뢰합니다", "나는 하나님의 말씀에 삶의 기준을 두는 자녀입니다", "나는 하나님의 평강을 누리는 자녀입니다",
+  "나는 예수님처럼 용서하는 자녀입니다"
 ];
 const youtubeLinks = [
-  "https://www.youtube.com/watch?v=L3u91yE9xR49", "https://www.youtube.com/watch?v=oDP320XlMvU0", "https://www.youtube.com/watch?v=oDP320XlMvU1", "https://www.youtube.com/watch?v=oDP320XlMvU2", "https://www.youtube.com/watch?v=oDP320XlMvU3",
-  "https://www.youtube.com/watch?v=oDP320XlMvU4", "https://www.youtube.com/watch?v=oDP320XlMvU5", "https://www.youtube.com/watch?v=oDP320XlMvU6", "https://www.youtube.com/watch?v=oDP320XlMvU7", "https://www.youtube.com/watch?v=oDP320XlMvU8",
-  "https://www.youtube.com/watch?v=oDP320XlMvU9", "https://www.youtube.com/watch?v=X-VPuHkfoNs0", "https://www.youtube.com/watch?v=X-VPuHkfoNs1", "https://www.youtube.com/watch?v=X-VPuHkfoNs2", "https://www.youtube.com/watch?v=X-VPuHkfoNs3",
-  "https://www.youtube.com/watch?v=X-VPuHkfoNs4", "https://www.youtube.com/watch?v=X-VPuHkfoNs5", "https://www.youtube.com/watch?v=X-VPuHkfoNs6", "https://www.youtube.com/watch?v=X-VPuHkfoNs7", "https://www.youtube.com/watch?v=X-VPuHkfoNs8",
-  "https://www.youtube.com/watch?v=X-VPuHkfoNs9", "https://www.youtube.com/watch?v=zU7y2vJzQYc0", "https://www.youtube.com/watch?v=zU7y2vJzQYc1", "https://www.youtube.com/watch?v=zU7y2vJzQYc2", "https://www.youtube.com/watch?v=zU7y2vJzQYc3",
-  "https://www.youtube.com/watch?v=zU7y2vJzQYc4", "https://www.youtube.com/watch?v=zU7y2vJzQYc5", "https://www.youtube.com/watch?v=zU7y2vJzQYc6", "https://www.youtube.com/watch?v=zU7y2vJzQYc7", "https://www.youtube.com/watch?v=zU7y2vJzQYc8"
+  "https://www.youtube.com/watch?v=A_SEQKpeHVw", "https://www.youtube.com/watch?v=hTrpI5sbMS8", "https://www.youtube.com/watch?v=2vbx_4bAoxU", "https://www.youtube.com/watch?v=PkZKUp4DfXw", "https://www.youtube.com/watch?v=HPJoDDr2YHA", "https://www.youtube.com/watch?v=xC53ITAoP0w", "https://www.youtube.com/watch?v=QNuN6618rS4", "https://www.youtube.com/watch?v=dQjt5Qdt22E", "https://www.youtube.com/watch?v=q4KeLEWTE0A", "https://www.youtube.com/watch?v=A_SEQKpeHVw", "https://www.youtube.com/watch?v=hwz1DIE7ofg", "https://www.youtube.com/watch?v=zb62W-xoUts", "https://www.youtube.com/watch?v=Z3juMkdp3ME", "https://www.youtube.com/watch?v=roh3jsvkTZ0", "https://www.youtube.com/watch?v=ZUOCGUOOO8g", "https://www.youtube.com/watch?v=T2QoSHfcxmQ", "https://www.youtube.com/watch?v=Qek0xGCTCIc", "https://www.youtube.com/watch?v=eMWCKZjztZ0", "https://www.youtube.com/watch?v=VyijUK5HzVU", "https://www.youtube.com/watch?v=evFTNQOrL3w", "https://www.youtube.com/watch?v=GU6VfynUTuA", "https://www.youtube.com/watch?v=QmKXA-mtkTI", "https://www.youtube.com/watch?v=KS4wNLfGD1s", "https://www.youtube.com/watch?v=_dRlrTHN6Ug", "https://www.youtube.com/watch?v=iHiZiEAm2FA", "https://www.youtube.com/watch?v=QNjJfNJrHF0", "https://www.youtube.com/watch?v=tl-ZLufM4gM", "https://www.youtube.com/watch?v=xd_UvkIKwmw", "https://www.youtube.com/watch?v=Yrgq59I205c", "https://www.youtube.com/watch?v=PiFvD8tyvMk"
 ];
 const MAX_DECLARATION_COUNT = 3;
 const challengeYear = 2025;
