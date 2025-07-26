@@ -46,6 +46,11 @@ const challengeYear = 2025;
 const challengeMonth = 5; // 0-indexed, 5는 6월
 const USERNAME_STORAGE_KEY = 'iamChallengeUserNameReactPure';
 
+const MAX_DECLARATION_COUNT = 3;
+const challengeYear = 2025;
+const challengeMonth = 7; // 0-indexed, 7은 8월
+const USERNAME_STORAGE_KEY = 'mensMinistryChallengeUserNameReact';
+
 const YouTubeIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-red-600 group-hover:text-red-700 transition-colors">
     <path fillRule="evenodd" d="M19.802 5.802a2.418 2.418 0 00-1.708-1.708C16.602 3.75 12 3.75 12 3.75s-4.602 0-6.094.344a2.418 2.418 0 00-1.708 1.708C3.75 7.294 3.75 12 3.75 12s0 4.706.344 6.198a2.418 2.418 0 001.708 1.708C7.398 20.25 12 20.25 12 20.25s4.602 0 6.094-.344a2.418 2.418 0 001.708-1.708C20.25 16.706 20.25 12 20.25 12s0-4.706-.448-6.198zM9.75 15.75V8.25l6 3.75-6 3.75z" clipRule="evenodd" />
