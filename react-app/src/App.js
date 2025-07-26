@@ -5,46 +5,67 @@ import { getFirestore, doc, setDoc, onSnapshot } from 'firebase/firestore';
 
 // Firebase 구성 (★★★★★ 실제 Firebase 프로젝트의 설정값으로 반드시 교체해주세요! ★★★★★)
 // Canvas 환경에서는 __firebase_config, __initial_auth_token, __app_id 전역 변수가 제공될 수 있습니다.
-
-const firebaseConfigManual = {
+const firebaseConfig = typeof __firebase_config !== 'undefined' 
+  ? JSON.parse(__firebase_config)
+  : {
+    // 로컬 테스트용 Firebase 구성 예시입니다. 실제 프로젝트 값으로 변경해주세요.
     apiKey: "AIzaSyCCGbZc4zEDgbaEhEWpg1rzCHKLQeKHthQ",
-  authDomain: "iam-calendar-179e8.firebaseapp.com",
-  projectId: "iam-calendar-179e8",
-  storageBucket: "iam-calendar-179e8.firebasestorage.app",
-  messagingSenderId: "1005875650817",
-  appId: "1:1005875650817:web:d6cf5eb571af10d2053b00"
-};
-const finalFirebaseConfig = firebaseConfigManual;
+    authDomain: "iam-calendar-179e8.firebaseapp.com",
+    projectId: "iam-calendar-179e8",
+    storageBucket: "iam-calendar-179e8.firebasestorage.app",
+    messagingSenderId: "1005875650817",
+    appId: "1:1005875650817:web:d6cf5eb571af10d2053b00"
+  };
 
-const appIdForFirestore = 'iam-challenge-react-pure';
+const appId = typeof __app_id !== 'undefined' ? __app_id : 'mens-ministry-challenge-react-august';
 
 // Firebase 앱 초기화
-const app = initializeApp(finalFirebaseConfig);
+const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 // import { setLogLevel } from "firebase/firestore"; // 필요시 디버그 로그 활성화
 // setLogLevel('debug');
 
+// 남선교회 8월 챌린지용 정체성 선포 (31일)
 const declarations = [
-   "나는 하나님의 사랑받는 자녀입니다", "나는 하나님의 형상입니다", "나는 하늘나라 상속자입니다",
-  "나는 하늘나라 시민권자입니다", "나는 하나님께 시선을 두는 자녀입니다", "나는 그리스도의 심판대에서 생각합니다",
-  "나는 하나님 보시기에 심히 좋은 존재입니다", "나는 예수님만큼 가치 있는 존재입니다", "나는 주안에서 기뻐하는 자입니다",
-  "나는 새사람의 정체성으로 살아갑니다", "나는 감사로 문을 열어갑니다", "나는 이기며 승리하는 권세가 있습니다",
-  "나는 말과 혀로 가정을 살리는 자입니다", "나는 그리스도와 연합된 존재입니다", "나는 삶을 인도하시는 하나님을 신뢰합니다",
-  "나는 영혼이 잘됨 같이 범사도 잘됩니다", "나는 믿음을 선포하는 자입니다", "나는 감사로 상황을 돌파합니다",
-  "나는 어떤 상황에서도 하나님을 찬양합니다", "나는 누구보다 존귀한 자녀입니다", "나는 예수님과 함께 걸어갑니다",
-  "나는 어둠을 몰아내는 빛입니다", "나는 기도하며 낙심하지 않는 자입니다",
-  "나는 빛 가운데 걸어가는 자녀입니다", "나는 기도 응답을 풍성히 누립니다", "나는 소망 가운데 인내합니다",
-  "나는 내 생각보다 크신 하나님의 계획을 신뢰합니다", "나는 하나님의 말씀에 삶의 기준을 두는 자녀입니다", "나는 하나님의 평강을 누리는 자녀입니다",
-  "나는 예수님처럼 용서하는 자녀입니다"
+  "나는 하나님의 사랑받는 자녀입니다", // 1
+  "나는 하나님의 형상입니다", // 2
+  "나는 하늘나라 상속자입니다", // 3
+  "나는 하늘나라 시민권자입니다", // 4
+  "나는 하나님께 시선을 두는 자녀입니다", // 5
+  "나는 그리스도의 심판대에서 생각합니다", // 6
+  "나는 하나님 보시기에 심히 좋은 존재입니다", // 7
+  "나는 예수님만큼 가치 있는 존재입니다", // 8
+  "나는 주안에서 기뻐하는 자입니다", // 9
+  "나는 새사람의 정체성으로 살아갑니다", // 10
+  "나는 감사로 문을 열어갑니다", // 11
+  "나는 이기며 승리하는 권세가 있습니다", // 12
+  "나는 말과 혀로 가정을 살리는 자입니다", // 13
+  "나는 그리스도와 연합된 존재입니다", // 14
+  "나는 삶을 인도하시는 하나님을 신뢰합니다", // 15
+  "나는 영혼이 잘됨 같이 범사도 잘됩니다", // 16
+  "나는 믿음을 선포하는 자입니다", // 17
+  "나는 감사로 상황을 돌파합니다", // 18
+  "나는 어떤 상황에서도 하나님을 찬양합니다", // 19
+  "나는 누구보다 존귀한 자녀입니다", // 20
+  "나는 예수님과 함께 걸어갑니다", // 21
+  "나는 어둠을 몰아내는 빛입니다", // 22
+  "나는 기도하며 낙심하지 않는 자입니다", // 23
+  "나는 빛 가운데 걸어가는 자녀입니다", // 24
+  "나는 기도 응답을 풍성히 누립니다", // 25
+  "나는 소망 가운데 인내합니다", // 26
+  "나는 내 생각보다 크신 하나님의 계획을 신뢰합니다", // 27
+  "나는 하나님의 말씀에 삶의 기준을 두는 자녀입니다", // 28
+  "나는 하나님의 평강을 누리는 자녀입니다", // 29
+  "나는 예수님처럼 용서하는 자녀입니다", // 30
+  "나는 가정의 영적 제사장입니다." // 31
 ];
+
+// 8월 챌린지용 찬양 링크 (31개) - 필요시 실제 링크로 교체해주세요.
 const youtubeLinks = [
-  "https://www.youtube.com/watch?v=A_SEQKpeHVw", "https://www.youtube.com/watch?v=hTrpI5sbMS8", "https://www.youtube.com/watch?v=2vbx_4bAoxU", "https://www.youtube.com/watch?v=PkZKUp4DfXw", "https://www.youtube.com/watch?v=HPJoDDr2YHA", "https://www.youtube.com/watch?v=xC53ITAoP0w", "https://www.youtube.com/watch?v=QNuN6618rS4", "https://www.youtube.com/watch?v=dQjt5Qdt22E", "https://www.youtube.com/watch?v=q4KeLEWTE0A", "https://www.youtube.com/watch?v=A_SEQKpeHVw", "https://www.youtube.com/watch?v=hwz1DIE7ofg", "https://www.youtube.com/watch?v=zb62W-xoUts", "https://www.youtube.com/watch?v=Z3juMkdp3ME", "https://www.youtube.com/watch?v=roh3jsvkTZ0", "https://www.youtube.com/watch?v=ZUOCGUOOO8g", "https://www.youtube.com/watch?v=T2QoSHfcxmQ", "https://www.youtube.com/watch?v=Qek0xGCTCIc", "https://www.youtube.com/watch?v=eMWCKZjztZ0", "https://www.youtube.com/watch?v=VyijUK5HzVU", "https://www.youtube.com/watch?v=evFTNQOrL3w", "https://www.youtube.com/watch?v=GU6VfynUTuA", "https://www.youtube.com/watch?v=QmKXA-mtkTI", "https://www.youtube.com/watch?v=KS4wNLfGD1s", "https://www.youtube.com/watch?v=_dRlrTHN6Ug", "https://www.youtube.com/watch?v=iHiZiEAm2FA", "https://www.youtube.com/watch?v=QNjJfNJrHF0", "https://www.youtube.com/watch?v=tl-ZLufM4gM", "https://www.youtube.com/watch?v=xd_UvkIKwmw", "https://www.youtube.com/watch?v=Yrgq59I205c", "https://www.youtube.com/watch?v=PiFvD8tyvMk"
+  "https://www.youtube.com/watch?v=A_SEQKpeHVw", "https://www.youtube.com/watch?v=hTrpI5sbMS8", "https://www.youtube.com/watch?v=2vbx_4bAoxU", "https://www.youtube.com/watch?v=PkZKUp4DfXw", "https://www.youtube.com/watch?v=HPJoDDr2YHA", "https://www.youtube.com/watch?v=xC53ITAoP0w", "https://www.youtube.com/watch?v=QNuN6618rS4", "https://www.youtube.com/watch?v=dQjt5Qdt22E", "https://www.youtube.com/watch?v=q4KeLEWTE0A", "https://www.youtube.com/watch?v=A_SEQKpeHVw", "https://www.youtube.com/watch?v=hwz1DIE7ofg", "https://www.youtube.com/watch?v=zb62W-xoUts", "https://www.youtube.com/watch?v=Z3juMkdp3ME", "https://www.youtube.com/watch?v=roh3jsvkTZ0", "https://www.youtube.com/watch?v=ZUOCGUOOO8g", "https://www.youtube.com/watch?v=T2QoSHfcxmQ", "https://www.youtube.com/watch?v=Qek0xGCTCIc", "https://www.youtube.com/watch?v=eMWCKZjztZ0", "https://www.youtube.com/watch?v=VyijUK5HzVU", "https://www.youtube.com/watch?v=evFTNQOrL3w", "https://www.youtube.com/watch?v=GU6VfynUTuA", "https://www.youtube.com/watch?v=QmKXA-mtkTI", "https://www.youtube.com/watch?v=KS4wNLfGD1s", "https://www.youtube.com/watch?v=_dRlrTHN6Ug", "https://www.youtube.com/watch?v=iHiZiEAm2FA", "https://www.youtube.com/watch?v=QNjJfNJrHF0", "https://www.youtube.com/watch?v=tl-ZLufM4gM", "https://www.youtube.com/watch?v=xd_UvkIKwmw", "https://www.youtube.com/watch?v=Yrgq59I205c", "https://www.youtube.com/watch?v=PiFvD8tyvMk",
+  "https://www.youtube.com/watch?v=VIgs8BoMnHk" // 31번째 링크
 ];
-const MAX_DECLARATION_COUNT = 3;
-const challengeYear = 2025;
-const challengeMonth = 5; // 0-indexed, 5는 6월
-const USERNAME_STORAGE_KEY = 'iamChallengeUserNameReactPure';
 
 const MAX_DECLARATION_COUNT = 3;
 const challengeYear = 2025;
@@ -75,15 +96,15 @@ function CalendarModal({ date, declaration, onClose, onDeclare, currentCount, is
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 transition-opacity duration-300 ease-in-out">
       <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-md transform transition-all duration-300 ease-in-out scale-100 text-center">
-        <h3 className="text-2xl font-bold text-purple-600 mb-4">{`${challengeYear}년 ${challengeMonth + 1}월 ${date}일`}</h3>
+        <h3 className="text-2xl font-bold text-blue-600 mb-4">{`${challengeYear}년 ${challengeMonth + 1}월 ${date}일`}</h3>
         <p className="text-lg text-gray-700 mb-6 leading-relaxed">"{declaration}"</p>
         <div className="flex flex-col items-center">
           <button
             onClick={handleDeclareClick}
             disabled={isCompleted}
-            className={`px-6 py-3 mb-4 text-white font-semibold rounded-md focus:outline-none transition-colors ${isCompleted ? 'bg-gray-400 cursor-not-allowed' : 'bg-purple-600 hover:bg-purple-700'}`}
+            className={`px-6 py-3 mb-4 text-white font-semibold rounded-md focus:outline-none transition-colors ${isCompleted ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'}`}
           >
-            {isCompleted ? `선포 완료!` : `I AM 선포하기 (${currentCount}/${MAX_DECLARATION_COUNT})`}
+            {isCompleted ? `선포 완료!` : `정체성 선포하기 (${currentCount}/${MAX_DECLARATION_COUNT})`}
           </button>
           <button
             onClick={onClose}
@@ -97,71 +118,81 @@ function CalendarModal({ date, declaration, onClose, onDeclare, currentCount, is
   );
 }
 
+function FinalCompletionModal({ userName, onClose }) {
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50">
+      <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-sm text-center transform transition-all scale-100">
+        <h3 className="text-2xl font-bold text-blue-600 mb-4">{userName}님 축복합니다.</h3>
+        <p className="text-lg text-gray-700 mb-6">새사람의 정체성을 선포하며 계속해서 승리하세요!</p>
+        <button
+          onClick={onClose}
+          className="px-6 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700"
+        >
+          확인
+        </button>
+      </div>
+    </div>
+  );
+}
+
+
 function App() {
   const [currentUserName, setCurrentUserName] = useState(null);
-  const [isAppReady, setIsAppReady] = useState(false); // 이름 입력/확인 후 앱 콘텐츠 표시 여부
+  const [isAppReady, setIsAppReady] = useState(false);
   
   const [userId, setUserId] = useState(null);
-  const [isAuthLoading, setIsAuthLoading] = useState(true); // Firebase 인증 로딩 상태
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
   const [dateStatuses, setDateStatuses] = useState(getInitialDateStatus());
   const [selectedDate, setSelectedDate] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [nameInput, setNameInput] = useState('');
+  const [isChallengeComplete, setIsChallengeComplete] = useState(false);
 
-  // localStorage에서 사용자 이름 로드
   useEffect(() => {
     const storedName = localStorage.getItem(USERNAME_STORAGE_KEY);
     if (storedName) {
       setCurrentUserName(storedName);
-      setIsAppReady(true); // 저장된 이름 있으면 바로 앱 콘텐츠 표시 준비
+      setIsAppReady(true);
     } else {
-      setIsAppReady(false); // 이름 없으면 로그인 화면 표시 준비
+      setIsAppReady(false);
     }
   }, []);
 
-  // Firebase 인증 상태 리스너
   useEffect(() => {
-    const hostToken = null;
+    const hostToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
     const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
-      setIsAuthLoading(true); // 인증 상태 변경 시작 시 로딩
+      setIsAuthLoading(true);
       if (user) {
         setUserId(user.uid);
-        console.log("User is signed in. UID:", user.uid);
       } else if (hostToken) {
         try {
-          console.log("Attempting sign in with custom token.");
           const userCredential = await signInWithCustomToken(auth, hostToken);
           setUserId(userCredential.user.uid);
-          console.log("Signed in with custom token. UID:", userCredential.user.uid);
         } catch (error) {
           console.error("Custom token sign-in failed, trying anonymous", error);
           try {
             const anonUser = await signInAnonymously(auth);
             setUserId(anonUser.user.uid);
-            console.log("Signed in anonymously after token fail. UID:", anonUser.user.uid);
           } catch (anonError) {
             console.error("Anonymous sign-in failed (after token fail):", anonError);
           }
         }
       } else {
         try {
-          console.log("No user or host token, attempting anonymous sign-in.");
           const anonUser = await signInAnonymously(auth);
           setUserId(anonUser.user.uid);
-          console.log("Signed in anonymously. UID:", anonUser.user.uid);
         } catch (error) {
           console.error("Default anonymous sign-in failed", error);
         }
       }
-      setIsAuthLoading(false); // 인증 상태 변경 완료 후 로딩 해제
+      setIsAuthLoading(false);
     });
     return () => unsubscribeAuth();
   }, []);
 
-  // Firestore 데이터 리스너
   useEffect(() => {
-    if (userId && isAppReady) { // 사용자가 로그인(이름 입력)하고, Firebase 인증도 완료되었을 때
-      const docRef = doc(db, `artifacts/${appIdForFirestore}/users/${userId}/iam_challenge_status`, `june${challengeYear}`);
+    if (userId && isAppReady) {
+      const docRef = doc(db, `artifacts/${appId}/users/${userId}/mens_challenge_status`, `august${challengeYear}`);
       const unsubscribeFirestore = onSnapshot(docRef, (docSnap) => {
         const initialStatuses = getInitialDateStatus();
         if (docSnap.exists()) {
@@ -179,8 +210,6 @@ function App() {
       });
       return () => unsubscribeFirestore();
     } else if (!userId && isAppReady) {
-        // 이름은 입력했지만 아직 Firebase 인증이 안된 경우 (또는 실패한 경우)
-        // 이 경우 dateStatuses는 초기 상태를 유지하거나, 사용자에게 알림을 줄 수 있습니다.
         setDateStatuses(getInitialDateStatus());
     }
   }, [userId, isAppReady]);
@@ -228,7 +257,7 @@ function App() {
     if (!userId) return;
     const dayKey = day.toString();
     try {
-        const docRef = doc(db, `artifacts/${appIdForFirestore}/users/${userId}/iam_challenge_status`, `june${challengeYear}`);
+        const docRef = doc(db, `artifacts/${appId}/users/${userId}/mens_challenge_status`, `august${challengeYear}`);
         await setDoc(docRef, { [dayKey]: statusUpdate }, { merge: true });
     } catch (error) {
         console.error("Error saving date status to Firestore:", error);
@@ -246,6 +275,11 @@ function App() {
     const newStatus = { ...currentStatus, youtubeViewed: true };
     setDateStatuses(prevStatuses => ({ ...prevStatuses, [dayKey]: newStatus }));
     await saveDateStatusToFirestore(day, newStatus);
+    
+    // 최종 완료 확인
+    if (day === declarations.length && newStatus.completed) {
+        setTimeout(() => setIsChallengeComplete(true), 500);
+    }
   };
 
   const handleOpenYoutubeLink = (e, day) => {
@@ -282,25 +316,31 @@ function App() {
     setDateStatuses(prevStatuses => ({ ...prevStatuses, [dayKey]: newStatus, }));
     await saveDateStatusToFirestore(selectedDate, newStatus);
 
+    // 최종 완료 확인
+    if (selectedDate === declarations.length && newCompleted && newStatus.youtubeViewed) {
+        setTimeout(() => setIsChallengeComplete(true), 500);
+    }
+
     if (newCompleted) {
       setTimeout(handleCloseModal, 300);
     }
   };
 
-  const daysInJune2025 = 30;
-  const firstDayOfMonth = new Date(challengeYear, challengeMonth, 1).getDay(); // 2025년 6월 1일은 일요일(0)
+  const daysInAugust2025 = 31;
+  const firstDayOfMonth = new Date(challengeYear, challengeMonth, 1).getDay(); // 2025년 8월 1일은 금요일(5)
   const calendarDays = [];
 
-  // 첫 주의 빈 칸 채우기 (2025년 6월 1일은 일요일이므로 firstDayOfMonth는 0)
   for (let i = 0; i < firstDayOfMonth; i++) {
     calendarDays.push(<div key={`empty-start-${i}`} className="border p-1 h-24 sm:h-28"></div>);
   }
   
-  // 날짜 채우기
-  for (let day = 1; day <= daysInJune2025; day++) {
+  for (let day = 1; day <= daysInAugust2025; day++) {
     const dayKey = day.toString();
     const status = dateStatuses[dayKey] || { count: 0, completed: false, youtubeViewed: false };
-    const isCompleted = status.completed;
+    const isDeclarationDone = status.completed;
+    const isYoutubeDone = status.youtubeViewed;
+    const isDayFullyCompleted = isDeclarationDone && isYoutubeDone;
+
     const today = new Date();
     const isToday = today.getFullYear() === challengeYear && today.getMonth() === challengeMonth && today.getDate() === day;
     const youtubeLinkExists = isValidYoutubeUrl(youtubeLinks[day-1]);
@@ -310,13 +350,13 @@ function App() {
       <div
         key={day}
         className={`border p-1 h-24 sm:h-28 flex flex-col items-center justify-around 
-                    ${isCompleted ? 'bg-green-200 font-semibold' : 'bg-white'} 
-                    ${isToday && !isCompleted ? 'ring-2 ring-purple-500' : ''}
-                    ${clickable ? 'cursor-pointer hover:bg-purple-100' : 'cursor-not-allowed opacity-60 bg-gray-100'}`}
+                    ${isDayFullyCompleted ? 'bg-blue-200 font-semibold' : 'bg-white'} 
+                    ${isToday && !isDayFullyCompleted ? 'ring-2 ring-blue-500' : ''}
+                    ${clickable ? 'cursor-pointer hover:bg-blue-100' : 'cursor-not-allowed opacity-60 bg-gray-100'}`}
         onClick={() => handleDateClick(day)}
       >
         <span className="text-sm sm:text-base font-medium">{day}</span>
-        <div className="text-xs text-purple-700 font-semibold leading-tight my-0.5 text-center">I AM 선포!</div> 
+        <div className="text-xs text-blue-700 font-semibold leading-tight my-0.5 text-center">정체성 선포!</div> 
         {youtubeLinkExists ? (
             <button 
                 onClick={(e) => clickable ? handleOpenYoutubeLink(e, day) : e.stopPropagation()}
@@ -325,46 +365,55 @@ function App() {
                 aria-label={`${day}일차 찬양 듣기`}
             > <YouTubeIcon /> </button>
         ) : ( <div className="h-7"></div> )}
-         {isCompleted ? <div className="w-2 h-2 bg-green-500 rounded-full"></div> : <div className="w-2 h-2"></div> }
+        <div className="flex items-center justify-center space-x-1.5 h-2">
+            {isDeclarationDone ? 
+                <div className="w-2 h-2 bg-green-500 rounded-full" title="선포 완료"></div> : 
+                <div className="w-2 h-2 bg-gray-300 rounded-full" title="선포 미완료"></div>
+            }
+            {isYoutubeDone ? 
+                <div className="w-2 h-2 bg-red-500 rounded-full" title="찬양 완료"></div> : 
+                <div className="w-2 h-2 bg-gray-300 rounded-full" title="찬양 미완료"></div>
+            }
+        </div>
       </div>
     );
   }
   
-  const totalCellsToDisplay = 35; // 5주 * 7일 = 35칸
+  const totalCellsToDisplay = 42; // 6주 * 7일 = 42칸, 8월 달력 표시에 충분
   while(calendarDays.length < totalCellsToDisplay) {
       calendarDays.push(<div key={`empty-end-${calendarDays.length}`} className="border p-1 h-24 sm:h-28"></div>);
   }
   const dayLabels = ['주일', '월', '화', '수', '목', '금', '토'];
 
-  if (isAuthLoading && !currentUserName) { // Firebase 인증 로딩 중이고, 아직 저장된 이름도 없을 때 (최초 로딩)
+  if (isAuthLoading && !currentUserName) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-400 via-teal-400 to-green-400 text-white text-xl p-4 font-['Nunito',_sans-serif]">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-sky-500 to-indigo-600 text-white text-xl p-4 font-['Nunito',_sans-serif]">
         <svg className="animate-spin h-10 w-10 text-white mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
         </svg>
-        <p>I AM 챌린지 앱을 준비 중입니다...</p>
+        <p>남선교회 챌린지 앱을 준비 중입니다...</p>
       </div>
     );
   }
   
-  if (!isAppReady) { // 저장된 이름이 없어 로그인 화면을 보여줘야 할 때
+  if (!isAppReady) {
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-400 via-teal-400 to-green-400 flex flex-col items-center justify-center p-4 sm:p-6">
+        <div className="min-h-screen bg-gradient-to-br from-sky-500 to-indigo-600 flex flex-col items-center justify-center p-4 sm:p-6">
             <div className="w-full max-w-md">
                 <div className="bg-white bg-opacity-95 p-8 sm:p-10 rounded-3xl shadow-xl text-center">
-                    <h1 className="text-3xl sm:text-4xl font-bold text-purple-600 mb-2">I AM 챌린지</h1>
-                    <p className="text-gray-600 mb-6">화양교회 두드림 청장년</p>
+                    <h1 className="text-3xl sm:text-4xl font-bold text-blue-700 mb-2 whitespace-nowrap">8월 정체성 선포 챌린지</h1>
+                    <p className="text-gray-600 mb-6">화양교회 남선교회</p>
                     <input 
                         type="text" 
                         value={nameInput}
                         onChange={(e) => setNameInput(e.target.value)}
                         onKeyPress={(e) => e.key === 'Enter' && handleStartChallenge()}
                         placeholder="이름 또는 닉네임을 입력하세요" 
-                        className="w-full px-4 py-3 mb-4 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 text-lg" />
+                        className="w-full px-4 py-3 mb-4 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-lg" />
                     <button 
                         onClick={handleStartChallenge}
-                        className="w-full bg-yellow-400 hover:bg-yellow-500 text-purple-700 font-bold py-3 px-4 rounded-lg text-lg transition-colors">
+                        className="w-full bg-yellow-400 hover:bg-yellow-500 text-blue-800 font-bold py-3 px-4 rounded-lg text-lg transition-colors">
                         챌린지 시작하기!
                     </button>
                 </div>
@@ -373,25 +422,24 @@ function App() {
     );
   }
 
-  // isAppReady가 true이면 메인 앱 콘텐츠 렌더링
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-400 via-teal-400 to-green-400 flex flex-col items-center p-4 sm:p-6 font-['Nunito',_sans-serif]">
+    <div className="min-h-screen bg-gradient-to-br from-sky-500 to-indigo-600 flex flex-col items-center p-4 sm:p-6 font-['Nunito',_sans-serif]">
       <header className="text-center my-6 sm:my-8">
-        <h1 className="text-4xl sm:text-5xl font-bold text-white drop-shadow-md">I AM 챌린지</h1>
+        <h1 className="text-4xl sm:text-5xl font-bold text-white drop-shadow-md whitespace-nowrap">8월 정체성 선포 챌린지</h1>
         <div className="inline-block mt-2 bg-black bg-opacity-20 px-3 py-1 rounded-md">
             <p id="headerUserText" className="text-lg sm:text-xl text-white opacity-90">
-                화양교회 두드림 청장년 {currentUserName && `(${currentUserName}님)`}
+                화양교회 남선교회 {currentUserName && `(${currentUserName}님)`}
             </p>
         </div>
         <p className="text-md sm:text-lg text-yellow-300 font-semibold mt-3">
-          2025년 6월 한 달 동안 매일 세 번씩 선포 & 찬양 듣기
+          2025년 8월 한 달 동안 매일 세 번씩 선포 & 찬양 듣기
         </p>
       </header>
 
       <main className="bg-white bg-opacity-95 p-4 sm:p-6 rounded-3xl shadow-xl w-full max-w-2xl lg:max-w-3xl">
         <div id="calendar-header" className="grid grid-cols-7 gap-px bg-gray-200 border border-gray-200">
           {dayLabels.map(label => (
-            <div key={label} className="bg-purple-500 text-white text-xs sm:text-sm font-semibold text-center py-2 sm:py-3">
+            <div key={label} className="bg-blue-600 text-white text-xs sm:text-sm font-semibold text-center py-2 sm:py-3">
               {label}
             </div>
           ))}
@@ -412,9 +460,16 @@ function App() {
         />
       )}
 
+      {isChallengeComplete && (
+        <FinalCompletionModal 
+            userName={currentUserName}
+            onClose={() => setIsChallengeComplete(false)} 
+        />
+      )}
+
       <footer className="mt-8 sm:mt-10 text-center">
         <p className="text-xs sm:text-sm text-white opacity-75">
-          매일의 선포를 통해 정체성을 확인하고 믿음으로 승리하세요!
+          매일의 정체성 선포를 통해 믿음의 용사로 굳건히 서세요!
         </p>
       </footer>
     </div>
