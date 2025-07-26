@@ -3,12 +3,11 @@ import { initializeApp } from 'firebase/app';
 import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from 'firebase/auth';
 import { getFirestore, doc, setDoc, onSnapshot } from 'firebase/firestore';
 
-// Netlify 빌드 오류를 해결하기 위해, Canvas 환경 변수를 인식하도록 주석을 추가하고
-// 외부 환경을 위한 실제 Firebase 구성 값을 포함합니다.
-// eslint-disable-next-line no-undef
-const firebaseConfig = typeof __firebase_config !== 'undefined' 
-  ? JSON.parse(__firebase_config)
+// Netlify 빌드 오류를 최종적으로 해결하기 위해, window 객체를 통해 안전하게 변수를 확인하도록 수정합니다.
+const firebaseConfig = (typeof window !== 'undefined' && window.__firebase_config)
+  ? JSON.parse(window.__firebase_config)
   : {
+    // 이 값들은 실제 Firebase 프로젝트의 값으로 채워져 있습니다.
     apiKey: "AIzaSyCCGbZc4zEDgbaEhEWpg1rzCHKLQeKHthQ",
     authDomain: "iam-calendar-179e8.firebaseapp.com",
     projectId: "iam-calendar-179e8",
@@ -17,8 +16,9 @@ const firebaseConfig = typeof __firebase_config !== 'undefined'
     appId: "1:1005875650817:web:d6cf5eb571af10d2053b00"
   };
 
-// eslint-disable-next-line no-undef
-const appId = typeof __app_id !== 'undefined' ? __app_id : 'mens-ministry-challenge-react-august';
+const appId = (typeof window !== 'undefined' && window.__app_id) 
+  ? window.__app_id 
+  : 'mens-ministry-challenge-react-august';
 
 // Firebase 앱 초기화
 const app = initializeApp(firebaseConfig);
@@ -158,8 +158,9 @@ function App() {
   }, []);
 
   useEffect(() => {
-    // eslint-disable-next-line no-undef
-    const hostToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+    const hostToken = (typeof window !== 'undefined' && window.__initial_auth_token)
+      ? window.__initial_auth_token
+      : null;
     const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
       setIsAuthLoading(true);
       if (user) {
