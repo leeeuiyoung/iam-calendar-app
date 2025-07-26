@@ -3,12 +3,12 @@ import { initializeApp } from 'firebase/app';
 import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from 'firebase/auth';
 import { getFirestore, doc, setDoc, onSnapshot } from 'firebase/firestore';
 
-// Firebase 구성 (★★★★★ 실제 Firebase 프로젝트의 설정값으로 반드시 교체해주세요! ★★★★★)
-// Canvas 환경에서는 __firebase_config, __initial_auth_token, __app_id 전역 변수가 제공될 수 있습니다.
+// Netlify 빌드 오류를 해결하기 위해, Canvas 환경 변수를 인식하도록 주석을 추가하고
+// 외부 환경을 위한 실제 Firebase 구성 값을 포함합니다.
+// eslint-disable-next-line no-undef
 const firebaseConfig = typeof __firebase_config !== 'undefined' 
   ? JSON.parse(__firebase_config)
   : {
-    // 로컬 테스트용 Firebase 구성 예시입니다. 실제 프로젝트 값으로 변경해주세요.
     apiKey: "AIzaSyCCGbZc4zEDgbaEhEWpg1rzCHKLQeKHthQ",
     authDomain: "iam-calendar-179e8.firebaseapp.com",
     projectId: "iam-calendar-179e8",
@@ -17,14 +17,13 @@ const firebaseConfig = typeof __firebase_config !== 'undefined'
     appId: "1:1005875650817:web:d6cf5eb571af10d2053b00"
   };
 
+// eslint-disable-next-line no-undef
 const appId = typeof __app_id !== 'undefined' ? __app_id : 'mens-ministry-challenge-react-august';
 
 // Firebase 앱 초기화
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-// import { setLogLevel } from "firebase/firestore"; // 필요시 디버그 로그 활성화
-// setLogLevel('debug');
 
 // 남선교회 8월 챌린지용 정체성 선포 (31일)
 const declarations = [
@@ -61,10 +60,10 @@ const declarations = [
   "나는 가정의 영적 제사장입니다." // 31
 ];
 
-// 8월 챌린지용 찬양 링크 (31개) - 필요시 실제 링크로 교체해주세요.
+// 8월 챌린지용 찬양 링크 (31개)
 const youtubeLinks = [
   "https://www.youtube.com/watch?v=A_SEQKpeHVw", "https://www.youtube.com/watch?v=hTrpI5sbMS8", "https://www.youtube.com/watch?v=2vbx_4bAoxU", "https://www.youtube.com/watch?v=PkZKUp4DfXw", "https://www.youtube.com/watch?v=HPJoDDr2YHA", "https://www.youtube.com/watch?v=xC53ITAoP0w", "https://www.youtube.com/watch?v=QNuN6618rS4", "https://www.youtube.com/watch?v=dQjt5Qdt22E", "https://www.youtube.com/watch?v=q4KeLEWTE0A", "https://www.youtube.com/watch?v=A_SEQKpeHVw", "https://www.youtube.com/watch?v=hwz1DIE7ofg", "https://www.youtube.com/watch?v=zb62W-xoUts", "https://www.youtube.com/watch?v=Z3juMkdp3ME", "https://www.youtube.com/watch?v=roh3jsvkTZ0", "https://www.youtube.com/watch?v=ZUOCGUOOO8g", "https://www.youtube.com/watch?v=T2QoSHfcxmQ", "https://www.youtube.com/watch?v=Qek0xGCTCIc", "https://www.youtube.com/watch?v=eMWCKZjztZ0", "https://www.youtube.com/watch?v=VyijUK5HzVU", "https://www.youtube.com/watch?v=evFTNQOrL3w", "https://www.youtube.com/watch?v=GU6VfynUTuA", "https://www.youtube.com/watch?v=QmKXA-mtkTI", "https://www.youtube.com/watch?v=KS4wNLfGD1s", "https://www.youtube.com/watch?v=_dRlrTHN6Ug", "https://www.youtube.com/watch?v=iHiZiEAm2FA", "https://www.youtube.com/watch?v=QNjJfNJrHF0", "https://www.youtube.com/watch?v=tl-ZLufM4gM", "https://www.youtube.com/watch?v=xd_UvkIKwmw", "https://www.youtube.com/watch?v=Yrgq59I205c", "https://www.youtube.com/watch?v=PiFvD8tyvMk",
-  "https://www.youtube.com/watch?v=VIgs8BoMnHk" // 31번째 링크
+  "https://www.youtube.com/watch?v=VIgs8BoMnHk"
 ];
 
 const MAX_DECLARATION_COUNT = 3;
@@ -159,6 +158,7 @@ function App() {
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line no-undef
     const hostToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
     const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
       setIsAuthLoading(true);
