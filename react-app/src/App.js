@@ -66,7 +66,7 @@ const youtubeLinks = [
   "https://www.youtube.com/watch?v=VIgs8BoMnHk"
 ];
 
-const MAX_DECLARATION_COUNT = 3;
+const MAX_DECLARATION_COUNT = 10;
 const challengeYear = 2025;
 const challengeMonth = 7; // 0-indexed, 7은 8월
 const USERNAME_STORAGE_KEY = 'mensMinistryChallengeUserNameReact';
@@ -433,7 +433,7 @@ function App() {
             </p>
         </div>
         <p className="text-md sm:text-lg text-yellow-300 font-semibold mt-3">
-          2025년 8월 한 달 동안 매일 세 번씩 선포 & 찬양 듣기
+          2025년 8월 한 달 동안 매일 열 번씩 선포 & 찬양 듣기
         </p>
       </header>
 
