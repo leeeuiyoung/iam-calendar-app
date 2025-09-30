@@ -241,12 +241,32 @@ function App() {
 
   const isDateClickable = useCallback((day) => {
     if (isAuthLoading || !userId) return false;
+
+    const today = new Date();
+    // Block clicks if the challenge month hasn't started yet
+    if (today.getFullYear() < challengeYear || (today.getFullYear() === challengeYear && today.getMonth() < challengeMonth)) {
+        return false;
+    }
+
+    // Determine the current day of the month, unlocking all days if the challenge month has passed
+    const currentDayOfMonth = (today.getFullYear() === challengeYear && today.getMonth() === challengeMonth) 
+      ? today.getDate() 
+      : 31;
+
+    // A day in the future (within the challenge month) is not clickable
+    if (day > currentDayOfMonth) {
+        return false;
+    }
+
+    // The first day is clickable if it's on or after Oct 1st
     if (day === 1) return true;
     
+    // For subsequent days, the previous day must be completed
     const prevDayKey = (day - 1).toString();
     const prevDayStatus = dateStatuses[prevDayKey];
     return prevDayStatus && prevDayStatus.completed;
-  }, [dateStatuses, userId, isAuthLoading]);
+}, [dateStatuses, userId, isAuthLoading]);
+
 
   const handleDateClick = (day) => {
     if (isAuthLoading || !userId) {
@@ -258,7 +278,14 @@ function App() {
             setSelectedDate(day);
             setIsModalOpen(true);
         } else {
-            alert("이전 날짜의 선포를 먼저 완료해주세요!");
+             const today = new Date();
+             const isChallengeMonth = today.getFullYear() === challengeYear && today.getMonth() === challengeMonth;
+             const currentDayOfMonth = isChallengeMonth ? today.getDate() : 31;
+             if (day > currentDayOfMonth) {
+                alert("아직 해당 날짜가 되지 않았습니다.");
+             } else {
+                alert("이전 날짜의 선포를 먼저 완료해주세요!");
+             }
         }
     }
   };
@@ -312,17 +339,19 @@ function App() {
       <div
         key={day}
         onClick={() => handleDateClick(day)}
-        className={`relative border border-teal-200 p-1 h-24 sm:h-28 flex flex-col items-center justify-center transition-all duration-200
+        className={`relative border border-teal-200 p-2 h-24 sm:h-28 flex flex-col justify-between transition-all duration-200
           ${isDayFullyCompleted ? 'bg-gradient-to-br from-green-300 to-teal-300 shadow-lg' : 'bg-white bg-opacity-50'}
           ${clickable ? 'cursor-pointer hover:bg-teal-100' : 'cursor-not-allowed opacity-70'}
         `}
       >
-        <span className={`absolute top-1 left-2 text-sm sm:text-base font-bold ${isDayFullyCompleted ? 'text-green-900' : 'text-gray-700'}`}>{day}</span>
-        <div className="text-xs sm:text-sm text-teal-700 font-semibold mt-2 px-1 text-center leading-tight">
-            <span className="hidden sm:inline">정체성 </span>선포
-        </div>
-        <div className="flex items-center justify-center space-x-1.5 h-7 mt-2">
-          <div className={`w-3 h-3 rounded-full ${status.completed ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+        <span className={`text-center w-full text-sm sm:text-base font-bold ${isDayFullyCompleted ? 'text-green-900' : 'text-gray-700'}`}>{day}</span>
+        <div className="text-center w-full">
+            <div className="text-xs sm:text-sm text-teal-700 font-semibold leading-tight mb-1">
+                <span className="hidden sm:inline">정체성 </span>선포
+            </div>
+            <div className="flex items-center justify-center space-x-1.5 h-4">
+              <div className={`w-3 h-3 rounded-full ${status.completed ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+            </div>
         </div>
       </div>
     );
@@ -331,14 +360,14 @@ function App() {
 
   if (!isAppReady) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-amber-100 to-sky-200 flex items-center justify-center p-4 font-['Inter',_sans-serif]">
+      <div className="min-h-screen bg-gradient-to-br from-amber-100 to-sky-200 flex items-center justify-center p-4 font-['Inter',_sans_serif]">
         <div className="w-full max-w-md bg-white bg-opacity-80 p-8 rounded-3xl shadow-2xl text-center border-t-4 border-l-4 border-teal-300 animate-fade-in">
           <h1 className="text-3xl sm:text-4xl font-extrabold text-teal-600 mb-2 drop-shadow-lg">화양교회 남선교회</h1>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-amber-600 mb-4 drop-shadow-lg leading-tight text-center break-keep">정체성 선포 챌린지</h2>
           <p className="text-gray-600 text-lg mb-6">매일 선포의 능력으로 승리하세요</p>
           <input
             type="text" value={cellInput} onChange={(e) => setCellInput(e.target.value)}
-            placeholder="셀을 입력하세요 (예: 화양셀)"
+            placeholder="셀을 입력하세요 (예: 기드온셀)"
             className="w-full px-5 py-3 mb-4 bg-gray-100 text-gray-800 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-400"
           />
           <input
@@ -356,7 +385,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-100 to-sky-200 flex flex-col items-center p-4 sm:p-6 font-['Inter',_sans-serif]">
+    <div className="min-h-screen bg-gradient-to-br from-amber-100 to-sky-200 flex flex-col items-center p-4 sm:p-6 font-['Inter',_sans_serif]">
       <header className="text-center my-6 sm:my-8 w-full">
         <h1 className="text-4xl sm:text-5xl font-extrabold text-teal-600 drop-shadow-lg">화양교회 남선교회</h1>
         <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-amber-600 drop-shadow-lg leading-tight mt-2 text-center break-keep">정체성 선포 챌린지</h2>
@@ -408,5 +437,4 @@ function App() {
 }
 
 export default App;
-
 
