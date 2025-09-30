@@ -338,7 +338,7 @@ function App() {
           <p className="text-gray-600 text-lg mb-6">매일 선포의 능력으로 승리하세요</p>
           <input
             type="text" value={cellInput} onChange={(e) => setCellInput(e.target.value)}
-            placeholder="셀을 입력하세요 (예: 기드온셀)"
+            placeholder="셀을 입력하세요 (예: 화양셀)"
             className="w-full px-5 py-3 mb-4 bg-gray-100 text-gray-800 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-400"
           />
           <input
