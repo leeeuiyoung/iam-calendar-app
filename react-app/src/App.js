@@ -7,13 +7,12 @@ import { getFirestore, doc, setDoc, onSnapshot } from 'firebase/firestore';
 const firebaseConfig = (typeof window !== 'undefined' && window.__firebase_config)
   ? JSON.parse(window.__firebase_config)
   : {
-    // Fallback config for local development
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_AUTH_DOMAIN",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_STORAGE_BUCKET",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyCCGbZc4zEDgbaEhEWpg1rzCHKLQeKHthQ",
+    authDomain: "iam-calendar-179e8.firebaseapp.com",
+    projectId: "iam-calendar-179e8",
+    storageBucket: "iam-calendar-179e8.firebasestorage.app",
+    messagingSenderId: "1005875650817",
+    appId: "1:1005875650817:web:d6cf5eb571af10d2053b00"
   };
 
 // Updated appId for the Men's Ministry challenge
