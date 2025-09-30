@@ -91,6 +91,7 @@ function App() {
   const [cellInput, setCellInput] = useState('');
   const [isChallengeComplete, setIsChallengeComplete] = useState(false);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+  const [isAudioLoaded, setIsAudioLoaded] = useState(false);
 
   // Reference to the <audio> element
   const audioRef = useRef(null);
@@ -166,15 +167,39 @@ function App() {
     }
   }, [userId, isAppReady]);
   
-  // Updated Background Music Logic to use <audio> element
+  // Autoplay music when the app is ready
+  useEffect(() => {
+    if (isAppReady && isAudioLoaded) {
+      // Attempt to play music automatically.
+      const playPromise = audioRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.then(_ => {
+          // Autoplay started successfully.
+          setIsMusicPlaying(true);
+        })
+        .catch(error => {
+          // Autoplay was prevented.
+          console.log("Autoplay was prevented by the browser. User must interact to play music.");
+          setIsMusicPlaying(false);
+        });
+      }
+    }
+  }, [isAppReady, isAudioLoaded]);
+
+  // Background Music Logic
   const toggleMusic = useCallback(() => {
     if (isMusicPlaying) {
       audioRef.current.pause();
+      setIsMusicPlaying(false);
     } else {
-      // Browsers may block autoplay, so we handle the error.
-      audioRef.current.play().catch(error => console.error("Audio play failed:", error));
+      audioRef.current.play().then(() => {
+        setIsMusicPlaying(true);
+      }).catch(error => {
+        console.error("Audio play failed:", error);
+        alert("브라우저 설정에 의해 자동 재생이 차단되었을 수 있습니다. 페이지와 상호작용 후 다시 시도해주세요.");
+        setIsMusicPlaying(false);
+      });
     }
-    setIsMusicPlaying(!isMusicPlaying);
   }, [isMusicPlaying]);
 
   const handleStartChallenge = () => {
@@ -306,14 +331,14 @@ function App() {
 
   if (!isAppReady) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-amber-100 to-sky-200 flex items-center justify-center p-4 font-['Inter',_sans_serif]">
+      <div className="min-h-screen bg-gradient-to-br from-amber-100 to-sky-200 flex items-center justify-center p-4 font-['Inter',_sans-serif]">
         <div className="w-full max-w-md bg-white bg-opacity-80 p-8 rounded-3xl shadow-2xl text-center border-t-4 border-l-4 border-teal-300 animate-fade-in">
           <h1 className="text-3xl sm:text-4xl font-extrabold text-teal-600 mb-2 drop-shadow-lg">화양교회 남선교회</h1>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-amber-600 mb-4 drop-shadow-lg leading-tight text-center break-keep">정체성 선포 챌린지</h2>
           <p className="text-gray-600 text-lg mb-6">매일 선포의 능력으로 승리하세요</p>
           <input
             type="text" value={cellInput} onChange={(e) => setCellInput(e.target.value)}
-            placeholder="셀을 입력하세요 (예: 기드온셀)"
+            placeholder="셀을 입력하세요 (예: ooo셀)"
             className="w-full px-5 py-3 mb-4 bg-gray-100 text-gray-800 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-400"
           />
           <input
@@ -331,9 +356,14 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-100 to-sky-200 flex flex-col items-center p-4 sm:p-6 font-['Inter',_sans_serif]">
+    <div className="min-h-screen bg-gradient-to-br from-amber-100 to-sky-200 flex flex-col items-center p-4 sm:p-6 font-['Inter',_sans-serif]">
        {/* Add the audio element here */}
-      <audio ref={audioRef} src="https://github.com/leeeuiyoung/music-storage/raw/refs/heads/main/PIANO.mp3" loop />
+       <audio 
+        ref={audioRef} 
+        src="https://github.com/leeeuiyoung/music-storage/raw/refs/heads/main/PIANO.mp3" 
+        loop 
+        onLoadedData={() => setIsAudioLoaded(true)}
+      />
 
       <header className="text-center my-6 sm:my-8 w-full">
         <h1 className="text-4xl sm:text-5xl font-extrabold text-teal-600 drop-shadow-lg">화양교회 남선교회</h1>
@@ -370,7 +400,12 @@ function App() {
         <FinalCompletionModal userName={userInfo?.name} onClose={() => setIsChallengeComplete(false)} />
       )}
         
-      <button onClick={toggleMusic} className="fixed bottom-6 right-6 bg-teal-500 hover:bg-teal-600 text-white rounded-full p-3 shadow-lg z-50 transition-transform transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-400" aria-label={isMusicPlaying ? "음악 끄기" : "음악 켜기"}>
+      <button 
+        onClick={toggleMusic} 
+        disabled={!isAudioLoaded}
+        className={`fixed bottom-6 right-6 bg-teal-500 hover:bg-teal-600 text-white rounded-full p-3 shadow-lg z-50 transition-all transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-400 ${!isAudioLoaded ? 'opacity-50 cursor-not-allowed' : ''}`} 
+        aria-label={isMusicPlaying ? "음악 끄기" : "음악 켜기"}
+      >
         {isMusicPlaying ? (
             <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" /></svg>
         ) : (
