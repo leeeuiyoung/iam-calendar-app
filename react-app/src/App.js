@@ -92,10 +92,8 @@ function App() {
   const [isChallengeComplete, setIsChallengeComplete] = useState(false);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
 
-  const audioContextRef = useRef(null);
-  const oscillatorRef = useRef(null);
-  const gainRef = useRef(null);
-  const sequenceTimeoutRef = useRef(null);
+  // Reference to the <audio> element
+  const audioRef = useRef(null);
 
   // Load user name from localStorage
   useEffect(() => {
@@ -168,63 +166,16 @@ function App() {
     }
   }, [userId, isAppReady]);
   
-  // Background Music Logic
+  // Updated Background Music Logic to use <audio> element
   const toggleMusic = useCallback(() => {
-    if (!audioContextRef.current) {
-        try {
-            const AudioContext = window.AudioContext || window.webkitAudioContext;
-            audioContextRef.current = new AudioContext();
-            oscillatorRef.current = audioContextRef.current.createOscillator();
-            gainRef.current = audioContextRef.current.createGain();
-            oscillatorRef.current.type = 'sine';
-            oscillatorRef.current.connect(gainRef.current);
-            gainRef.current.connect(audioContextRef.current.destination);
-            gainRef.current.gain.setValueAtTime(0, audioContextRef.current.currentTime);
-            oscillatorRef.current.start();
-        } catch (e) {
-            console.error("Web Audio API not supported", e);
-            return;
-        }
-    }
-
     if (isMusicPlaying) {
-        clearTimeout(sequenceTimeoutRef.current);
-        gainRef.current.gain.cancelScheduledValues(audioContextRef.current.currentTime);
-        gainRef.current.gain.linearRampToValueAtTime(0, audioContextRef.current.currentTime + 0.2);
-        setIsMusicPlaying(false);
+      audioRef.current.pause();
     } else {
-        if (audioContextRef.current.state === 'suspended') {
-            audioContextRef.current.resume();
-        }
-        let sequenceIndex = 0;
-        const musicSequence = [
-            { freq: 261.63, duration: 400 }, { freq: 329.63, duration: 400 },
-            { freq: 392.00, duration: 400 }, { freq: 523.25, duration: 800 },
-        ];
-        const play = () => {
-            const note = musicSequence[sequenceIndex % musicSequence.length];
-            const now = audioContextRef.current.currentTime;
-            oscillatorRef.current.frequency.setValueAtTime(note.freq, now);
-            gainRef.current.gain.setValueAtTime(0, now).linearRampToValueAtTime(0.05, now + 0.05)
-                           .linearRampToValueAtTime(0, now + (note.duration / 1000) - 0.05);
-            sequenceIndex++;
-            sequenceTimeoutRef.current = setTimeout(play, note.duration);
-        };
-        play();
-        setIsMusicPlaying(true);
+      // Browsers may block autoplay, so we handle the error.
+      audioRef.current.play().catch(error => console.error("Audio play failed:", error));
     }
+    setIsMusicPlaying(!isMusicPlaying);
   }, [isMusicPlaying]);
-  
-  // Cleanup audio context on unmount
-  useEffect(() => {
-    return () => {
-        if (sequenceTimeoutRef.current) clearTimeout(sequenceTimeoutRef.current);
-        if (audioContextRef.current) {
-            audioContextRef.current.close().catch(e => console.error(e));
-        }
-    };
-  }, []);
-
 
   const handleStartChallenge = () => {
     const name = nameInput.trim();
@@ -243,25 +194,20 @@ function App() {
     if (isAuthLoading || !userId) return false;
 
     const today = new Date();
-    // Block clicks if the challenge month hasn't started yet
     if (today.getFullYear() < challengeYear || (today.getFullYear() === challengeYear && today.getMonth() < challengeMonth)) {
         return false;
     }
 
-    // Determine the current day of the month, unlocking all days if the challenge month has passed
     const currentDayOfMonth = (today.getFullYear() === challengeYear && today.getMonth() === challengeMonth) 
       ? today.getDate() 
       : 31;
 
-    // A day in the future (within the challenge month) is not clickable
     if (day > currentDayOfMonth) {
         return false;
     }
 
-    // The first day is clickable if it's on or after Oct 1st
     if (day === 1) return true;
     
-    // For subsequent days, the previous day must be completed
     const prevDayKey = (day - 1).toString();
     const prevDayStatus = dateStatuses[prevDayKey];
     return prevDayStatus && prevDayStatus.completed;
@@ -386,6 +332,9 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-100 to-sky-200 flex flex-col items-center p-4 sm:p-6 font-['Inter',_sans_serif]">
+       {/* Add the audio element here */}
+      <audio ref={audioRef} src="https://github.com/leeeuiyoung/music-storage/raw/refs/heads/main/PIANO.mp3" loop />
+
       <header className="text-center my-6 sm:my-8 w-full">
         <h1 className="text-4xl sm:text-5xl font-extrabold text-teal-600 drop-shadow-lg">화양교회 남선교회</h1>
         <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-amber-600 drop-shadow-lg leading-tight mt-2 text-center break-keep">정체성 선포 챌린지</h2>
