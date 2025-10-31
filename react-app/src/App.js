@@ -15,28 +15,58 @@ const firebaseConfig = (typeof window !== 'undefined' && window.__firebase_confi
     appId: "1:1005875650817:web:d6cf5eb571af10d2053b00"
   };
 
-// Updated appId for the Men's Ministry challenge
+// Updated appId for the Men's Ministry challenge (November)
 const appId = (typeof window !== 'undefined' && window.__app_id) 
   ? window.__app_id 
-  : 'hwayang-men-challenge-react-october';
+  : 'hwayang-men-challenge-react-november';
 
 // Initialize Firebase App
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// Declarations for 31 days of October
+// Declarations for 30 days of November
+// (Original first 29 + new 30th declaration) - Shuffled Order
 const declarations = [
-  "나는 영적 나실인입니다!", "나는 하나님이 기뻐하시고 사랑하시는 자녀입니다!", "예수님의 온유와 겸손이 내 안에 있습니다!", "나는 하나님의 지혜로 충만합니다!", "유혹과 시험을 이겨낼 힘이 내 안에 있습니다!", "주님은 원수의 목전에서도 상을 베풀어 주십니다!", "나는 하나님 보시기에 심히 좋은 존재입니다!", "나는 하나님의 큰 그림을 믿습니다!", "세상을 이기신 주님이 내 안에 계십니다!", "나는 새사람의 정체성으로 살아갑니다!", "하나님은 든든한 내 아버지이십니다!", "나는 복된 자리에만 거하겠습니다!", "나의 우선순위는 말씀과 기도입니다!", "나는 하나님께 칭찬받는 자녀입니다!", "급진적인 겸손이 내안에 있습니다!", "나는 약함속에서도 다시 일어섭니다!", "주님은 가장 좋은 것으로 채워주십니다!", "나는 하늘나라의 상속자입니다!", "주님은 우리 가정을 부요케 하십니다!", "나는 이미 천국열쇠를 가졌습니다!", "나는 주와 한영입니다!", "나는 어둠을 몰아내는 빛입니다", "나는 기도하고 낙심하지 않습니다!", "나는 빛 가운데 걸어가는 자녀입니다!", "내 삶의 구석마다 주님의 손길이 머물고 있습니다!", "나는 선한 영향력을 나타내는 소금입니다!", "나는 빛의 갑옷을 입었습니다!", "예수님의 권세가 나의 권세입니다!", "나는 풍성한 결실을 맺는 좋은 땅입니다!", "나는 축복의 유통자입니다!", "나는 그리스도의 향기입니다!"
+  "나는 새사람의 정체성으로 살아갑니다!", // Original 10
+  "나는 하나님의 지혜로 충만합니다!", // Original 4
+  "나는 하나님이 기뻐하시고 사랑하시는 자녀입니다!", // Original 2
+  "나는 빛 가운데 걸어가는 자녀입니다!", // Original 24
+  "나는 영적 나실인입니다!", // Original 1
+  "나는 기도하고 낙심하지 않습니다!", // Original 23
+  "나는 하늘나라의 상속자입니다!", // Original 18
+  "예수님의 온유와 겸손이 내 안에 있습니다!", // Original 3
+  "나는 약함속에서도 다시 일어섭니다!", // Original 16
+  "주님은 원수의 목전에서도 상을 베풀어 주십니다!", // Original 6
+  "나는 풍성한 결실을 맺는 좋은 땅입니다!", // Original 29
+  "나는 하나님 보시기에 심히 좋은 존재입니다!", // Original 7
+  "나는 빛의 갑옷을 입었습니다!", // Original 27
+  "나는 어둠을 몰아내는 빛입니다", // Original 22
+  "하나님은 든든한 내 아버지이십니다!", // Original 11
+  "나는 하나님의 큰 그림을 믿습니다!", // Original 8
+  "유혹과 시험을 이겨낼 힘이 내 안에 있습니다!", // Original 5
+  "나는 복된 자리에만 거하겠습니다!", // Original 12
+  "내 삶에 예수님의 능력이 풀어집니다!", // Original 30 (New)
+  "나는 주와 한영입니다!", // Original 21
+  "주님은 우리 가정을 부요케 하십니다!", // Original 19
+  "나는 하나님께 칭찬받는 자녀입니다!", // Original 14
+  "세상을 이기신 주님이 내 안에 계십니다!", // Original 9
+  "나는 이미 천국열쇠를 가졌습니다!", // Original 20
+  "급진적인 겸손이 내안에 있습니다!", // Original 15
+  "주님은 가장 좋은 것으로 채워주십니다!", // Original 17
+  "나의 우선순위는 말씀과 기도입니다!", // Original 13
+  "나는 선한 영향력을 나타내는 소금입니다!", // Original 26
+  "예수님의 권세가 나의 권세입니다!", // Original 28
+  "내 삶의 구석마다 주님의 손길이 머물고 있습니다!" // Original 25
 ];
 
 // Declaration count is 10
 const MAX_DECLARATION_COUNT = 10;
 const challengeYear = 2025;
-const challengeMonth = 9; // 0-indexed, 9 is October
+const challengeMonth = 10; // 0-indexed, 10 is November
 // Updated storage key for the Men's Ministry challenge
-const USERNAME_STORAGE_KEY = 'hwayangMenChallengeUserInfoReactOctober';
-const CHALLENGE_ID = `october${challengeYear}`;
+const USERNAME_STORAGE_KEY = 'hwayangMenChallengeUserInfoReactNovember';
+const CHALLENGE_ID = `november${challengeYear}`;
 
 const getInitialDateStatus = () => {
   const status = {};
@@ -95,6 +125,9 @@ function App() {
 
   // Reference to the <audio> element
   const audioRef = useRef(null);
+  
+  // Calculate number of days in the challenge month
+  const daysInMonth = new Date(challengeYear, challengeMonth + 1, 0).getDate();
 
   // Load user name from localStorage
   useEffect(() => {
@@ -225,7 +258,7 @@ function App() {
 
     const currentDayOfMonth = (today.getFullYear() === challengeYear && today.getMonth() === challengeMonth) 
       ? today.getDate() 
-      : 31;
+      : daysInMonth; // Use dynamic daysInMonth
 
     if (day > currentDayOfMonth) {
         return false;
@@ -236,7 +269,7 @@ function App() {
     const prevDayKey = (day - 1).toString();
     const prevDayStatus = dateStatuses[prevDayKey];
     return prevDayStatus && prevDayStatus.completed;
-}, [dateStatuses, userId, isAuthLoading]);
+  }, [dateStatuses, userId, isAuthLoading, daysInMonth]);
 
 
   const handleDateClick = (day) => {
@@ -251,11 +284,11 @@ function App() {
         } else {
              const today = new Date();
              const isChallengeMonth = today.getFullYear() === challengeYear && today.getMonth() === challengeMonth;
-             const currentDayOfMonth = isChallengeMonth ? today.getDate() : 31;
+             const currentDayOfMonth = isChallengeMonth ? today.getDate() : daysInMonth; // Use dynamic daysInMonth
              if (day > currentDayOfMonth) {
-                alert("아직 해당 날짜가 되지 않았습니다.");
+               alert("아직 해당 날짜가 되지 않았습니다.");
              } else {
-                alert("이전 날짜의 선포를 먼저 완료해주세요!");
+               alert("이전 날짜의 선포를 먼저 완료해주세요!");
              }
         }
     }
@@ -292,7 +325,6 @@ function App() {
     if (newCompleted) { setTimeout(handleCloseModal, 300); }
   };
 
-  const daysInOctober2025 = 31;
   const firstDayOfMonth = new Date(challengeYear, challengeMonth, 1).getDay();
   const calendarDays = [];
 
@@ -300,7 +332,7 @@ function App() {
     calendarDays.push(<div key={`empty-start-${i}`} className="border border-teal-200 p-1 h-24 sm:h-28 bg-black bg-opacity-5"></div>);
   }
 
-  for (let day = 1; day <= daysInOctober2025; day++) {
+  for (let day = 1; day <= daysInMonth; day++) {
     const dayKey = day.toString();
     const status = dateStatuses[dayKey] || { count: 0, completed: false };
     const isDayFullyCompleted = status.completed;
@@ -369,7 +401,7 @@ function App() {
         <h1 className="text-4xl sm:text-5xl font-extrabold text-teal-600 drop-shadow-lg">화양교회 남선교회</h1>
         <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-amber-600 drop-shadow-lg leading-tight mt-2 text-center break-keep">정체성 선포 챌린지</h2>
         <div className="inline-block mt-3 bg-white bg-opacity-50 px-4 py-2 rounded-lg backdrop-blur-sm">
-          <p className="text-lg sm:text-xl text-slate-700 font-semibold">10월 한 달 동안 매일 선포</p>
+          <p className="text-lg sm:text-xl text-slate-700 font-semibold">11월 한 달 동안 매일 선포</p>
           {userInfo && <p className="text-md sm:text-lg text-slate-600 mt-1">({userInfo.cell} {userInfo.name}님)</p>}
           {userId && <p className="text-xs text-slate-500 mt-1 break-all">User ID: {userId}</p>}
         </div>
